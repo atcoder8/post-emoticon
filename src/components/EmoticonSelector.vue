@@ -24,14 +24,20 @@ function selectRandomEmoticon() {
 <template>
   <div class="flex gap-x-2">
     <!-- 顔文字のセレクトボックス -->
-    <select v-model="selectedOption" class="border px-2 py-1 rounded-lg">
+    <select
+      v-model="selectedOption"
+      class="border px-2 py-1 rounded-lg cursor-pointer"
+    >
       <option :key="option.id" :value="option" v-for="option in options">
         {{ option.emoticon }}
       </option>
     </select>
 
     <!-- ランダム選択ボタン -->
-    <button @click="selectRandomEmoticon" class="border px-2 py-1 rounded-lg">
+    <button
+      @click="selectRandomEmoticon"
+      class="border px-2 py-1 rounded-lg cursor-pointer"
+    >
       ランダム
     </button>
   </div>

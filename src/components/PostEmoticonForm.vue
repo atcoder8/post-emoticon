@@ -35,7 +35,7 @@ function postEmoticon() {
 </script>
 
 <template>
-  <div class="flex flex-col m-2 gap-y-2">
+  <div class="flex flex-col gap-y-2">
     <EmoticonSelector :options="emoticonOptions" v-model="selectedOption" />
 
     <div>

@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import emoticonData from "../assets/emoticon-data.json";
 import EmoticonSelector from "../components/EmoticonSelector.vue";
-import type { EmoticonOption } from "../types";
+import type { EmoticonOption, Platform } from "../types";
 import urlJoin from "proper-url-join";
 
 const emoticonList = emoticonData["emoticon-list"];
@@ -18,13 +18,26 @@ const emoticonOptions: EmoticonOption[] = emoticonList.map(
 /** 選択された顔文字 */
 const selectedOption = ref<EmoticonOption | undefined>(emoticonOptions[0]);
 
-/** 顔文字を𝕏に投稿します。 */
-function postEmoticon() {
+/** プラットフォームに対応するエンドポイントを返します。 */
+function getEndpoint(platform: Platform) {
+  switch (platform) {
+    case "x":
+      return "https://twitter.com/intent/tweet";
+    case "bluesky":
+      return "https://bsky.app/intent/compose";
+
+    default:
+      throw Error("不明なプラットフォームです。");
+  }
+}
+
+/** 顔文字をSNSプラットフォームに投稿します。 */
+function postEmoticon(platform: Platform) {
   if (selectedOption.value === undefined) {
     return;
   }
 
-  const postLink = urlJoin("https://twitter.com/intent/tweet", {
+  const postLink = urlJoin(getEndpoint(platform), {
     query: {
       text: selectedOption.value.emoticon,
     },
@@ -32,22 +45,38 @@ function postEmoticon() {
 
   window.open(postLink, "_blank");
 }
+
+/** 投稿先プラットフォームの選択肢 */
+interface PlatformOption {
+  /** プラットフォーム */
+  platform: Platform;
+
+  /** プラットフォームの表示ラベル */
+  label: string;
+}
+
+/** 投稿先プラットフォームの選択肢のリスト */
+const platformOptions = [
+  { platform: "x", label: "𝕏" },
+  { platform: "bluesky", label: "Bluesky" },
+] as const satisfies PlatformOption[];
 </script>
 
 <template>
   <div class="flex flex-col gap-y-2">
     <EmoticonSelector :options="emoticonOptions" v-model="selectedOption" />
 
-    <div>
+    <div class="flex gap-x-2">
       <button
-        @click="postEmoticon"
+        v-for="option in platformOptions"
+        @click="postEmoticon(option.platform)"
         :disabled="selectedOption === undefined"
         class="px-2 py-1 border rounded-lg"
         :class="
           selectedOption !== undefined ? 'cursor-pointer' : 'text-gray-300'
         "
       >
-        𝕏に投稿
+        {{ option.label }}に投稿
       </button>
     </div>
   </div>

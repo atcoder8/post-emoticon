@@ -18,6 +18,9 @@ const emoticonOptions: EmoticonOption[] = emoticonList.map(
 /** 選択された顔文字 */
 const selectedOption = ref<EmoticonOption | undefined>(emoticonOptions[0]);
 
+/** 投稿にリンクを含めるかどうかを表すフラグ */
+const includeLink = ref<boolean>(false);
+
 /** プラットフォームに対応するエンドポイントを返します。 */
 function getEndpoint(platform: Platform) {
   switch (platform) {
@@ -37,9 +40,13 @@ function postEmoticon(platform: Platform) {
     return;
   }
 
+  const text = includeLink.value
+    ? `${selectedOption.value.emoticon}\n${location.href}`
+    : selectedOption.value.emoticon;
+
   const postLink = urlJoin(getEndpoint(platform), {
     query: {
-      text: selectedOption.value.emoticon,
+      text,
     },
   });
 
@@ -78,6 +85,11 @@ const platformOptions = [
       >
         {{ option.label }}に投稿
       </button>
+    </div>
+
+    <div class="flex gap-x-1">
+      <label for="include-link-checkbox">このページのリンクを含める</label>
+      <input id="include-link-checkbox" type="checkbox" v-model="includeLink" />
     </div>
   </div>
 </template>

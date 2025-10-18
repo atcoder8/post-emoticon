@@ -73,6 +73,11 @@ const platformOptions = [
   <div class="flex flex-col gap-y-2">
     <EmoticonSelector :options="emoticonOptions" v-model="selectedOption" />
 
+    <div class="flex gap-x-1">
+      <label for="include-link-checkbox">このページのリンクを含める</label>
+      <input id="include-link-checkbox" type="checkbox" v-model="includeLink" />
+    </div>
+
     <div class="flex gap-x-2">
       <button
         v-for="option in platformOptions"
@@ -85,11 +90,6 @@ const platformOptions = [
       >
         {{ option.label }}に投稿
       </button>
-    </div>
-
-    <div class="flex gap-x-1">
-      <label for="include-link-checkbox">このページのリンクを含める</label>
-      <input id="include-link-checkbox" type="checkbox" v-model="includeLink" />
     </div>
   </div>
 </template>

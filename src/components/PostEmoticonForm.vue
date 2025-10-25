@@ -77,19 +77,19 @@ const platformOptions = [
     <EmoticonSelector :options="emoticonOptions" v-model="selectedOption" />
 
     <div class="flex gap-x-1">
-      <label for="include-hashtag-checkbox"
-        >ハッシュタグ「#今日の顔文字」を含める</label
-      >
       <input
         id="include-hashtag-checkbox"
         type="checkbox"
         v-model="includeHashtag"
       />
+      <label for="include-hashtag-checkbox"
+        >ハッシュタグ「#今日の顔文字」を含める</label
+      >
     </div>
 
     <div class="flex gap-x-1">
-      <label for="include-link-checkbox">このページのリンクを含める</label>
       <input id="include-link-checkbox" type="checkbox" v-model="includeLink" />
+      <label for="include-link-checkbox">このページのリンクを含める</label>
     </div>
 
     <div class="flex gap-x-2">

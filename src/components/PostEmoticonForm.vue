@@ -18,6 +18,9 @@ const emoticonOptions: EmoticonOption[] = emoticonList.map(
 /** 選択された顔文字 */
 const selectedOption = ref<EmoticonOption | undefined>(emoticonOptions[0]);
 
+/** 投稿にハッシュタグ「#今日の顔文字」を含めるかどうかを表すフラグ */
+const includeHashtag = ref<boolean>(false);
+
 /** 投稿にリンクを含めるかどうかを表すフラグ */
 const includeLink = ref<boolean>(false);
 
@@ -40,9 +43,9 @@ function postEmoticon(platform: Platform) {
     return;
   }
 
-  const text = includeLink.value
-    ? `${selectedOption.value.emoticon}\n${location.href}`
-    : selectedOption.value.emoticon;
+  const hashtag = includeHashtag.value ? "\n#今日の顔文字" : "";
+  const link = includeLink.value ? `\n${location.href}` : "";
+  const text = `${selectedOption.value.emoticon}${hashtag}${link}`;
 
   const postLink = urlJoin(getEndpoint(platform), {
     query: {
@@ -72,6 +75,17 @@ const platformOptions = [
 <template>
   <div class="flex flex-col gap-y-2">
     <EmoticonSelector :options="emoticonOptions" v-model="selectedOption" />
+
+    <div class="flex gap-x-1">
+      <label for="include-hashtag-checkbox"
+        >ハッシュタグ「#今日の顔文字」を含める</label
+      >
+      <input
+        id="include-hashtag-checkbox"
+        type="checkbox"
+        v-model="includeHashtag"
+      />
+    </div>
 
     <div class="flex gap-x-1">
       <label for="include-link-checkbox">このページのリンクを含める</label>

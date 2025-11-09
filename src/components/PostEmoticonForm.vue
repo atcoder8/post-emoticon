@@ -48,19 +48,19 @@ const {
       <label for="include-link-checkbox">このページのリンクを含める</label>
     </div>
 
-    <div class="flex gap-x-2">
-      <BasicButton
-        label="クリップボードにコピー"
-        :enabled="selectedOption !== undefined"
-        @click="copyToClipboard"
-      />
-
+    <div class="flex flex-wrap gap-2">
       <BasicButton
         v-for="option in platformOptions"
         :key="option.platform"
         :label="`${option.label}に投稿`"
         :enabled="selectedOption !== undefined"
         @click="postEmoticon(option.platform)"
+      />
+
+      <BasicButton
+        label="クリップボードにコピー"
+        :enabled="selectedOption !== undefined"
+        @click="copyToClipboard"
       />
     </div>
   </div>

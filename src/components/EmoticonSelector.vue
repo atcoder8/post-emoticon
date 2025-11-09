@@ -23,11 +23,11 @@ function selectRandomEmoticon() {
 </script>
 
 <template>
-  <div class="flex gap-x-2">
+  <div class="flex gap-x-2 items-center">
     <!-- 顔文字のセレクトボックス -->
     <select
       v-model="selectedOption"
-      class="border px-2 py-1 rounded-lg cursor-pointer"
+      class="border px-2 py-1 rounded-lg cursor-pointer min-h-[42px]"
     >
       <option :key="option.id" :value="option" v-for="option in options">
         {{ option.emoticon }}

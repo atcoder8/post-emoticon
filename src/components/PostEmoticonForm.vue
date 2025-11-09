@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import emoticonData from "../assets/emoticon-data.json";
 import EmoticonSelector from "../components/EmoticonSelector.vue";
 import type { EmoticonOption, Platform } from "../types";
 import urlJoin from "proper-url-join";
+import BasicButton from "./BasicButton.vue";
 
 const emoticonList = emoticonData["emoticon-list"];
 
@@ -37,19 +38,26 @@ function getEndpoint(platform: Platform) {
   }
 }
 
-/** 顔文字をSNSプラットフォームに投稿します。 */
-function postEmoticon(platform: Platform) {
+/** 投稿内容の文字列 */
+const postText = computed(() => {
   if (selectedOption.value === undefined) {
-    return;
+    return undefined;
   }
 
   const hashtag = includeHashtag.value ? "\n#今日の顔文字" : "";
   const link = includeLink.value ? `\n${location.href}` : "";
-  const text = `${selectedOption.value.emoticon}${hashtag}${link}`;
+  return `${selectedOption.value.emoticon}${hashtag}${link}`;
+});
+
+/** 顔文字をSNSプラットフォームに投稿します。 */
+function postEmoticon(platform: Platform) {
+  if (postText.value === undefined) {
+    return;
+  }
 
   const postLink = urlJoin(getEndpoint(platform), {
     query: {
-      text,
+      text: postText.value,
     },
   });
 
@@ -70,6 +78,15 @@ const platformOptions = [
   { platform: "x", label: "𝕏" },
   { platform: "bluesky", label: "Bluesky" },
 ] as const satisfies PlatformOption[];
+
+/** 投稿内容をクリップボードにコピーします。 */
+function copyToClipboard() {
+  if (postText.value === undefined) {
+    return;
+  }
+
+  navigator.clipboard.writeText(postText.value);
+}
 </script>
 
 <template>
@@ -93,17 +110,19 @@ const platformOptions = [
     </div>
 
     <div class="flex gap-x-2">
-      <button
+      <BasicButton
+        label="クリップボードにコピー"
+        :enabled="selectedOption !== undefined"
+        @click="copyToClipboard"
+      />
+
+      <BasicButton
         v-for="option in platformOptions"
+        :key="option.platform"
+        :label="`${option.label}に投稿`"
+        :enabled="selectedOption !== undefined"
         @click="postEmoticon(option.platform)"
-        :disabled="selectedOption === undefined"
-        class="px-2 py-1 border rounded-lg"
-        :class="
-          selectedOption !== undefined ? 'cursor-pointer' : 'text-gray-300'
-        "
-      >
-        {{ option.label }}に投稿
-      </button>
+      />
     </div>
   </div>
 </template>

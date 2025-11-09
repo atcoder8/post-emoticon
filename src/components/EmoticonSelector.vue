@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { EmoticonOption } from "../types";
 import { generateRandomInteger } from "../utils/randomNumber";
+import BasicButton from "./BasicButton.vue";
 
 interface Props {
   /** 顔文字の選択肢 */
@@ -34,11 +35,10 @@ function selectRandomEmoticon() {
     </select>
 
     <!-- ランダム選択ボタン -->
-    <button
+    <BasicButton
+      label="ランダム"
+      :enabled="true"
       @click="selectRandomEmoticon"
-      class="border px-2 py-1 rounded-lg cursor-pointer"
-    >
-      ランダム
-    </button>
+    />
   </div>
 </template>
